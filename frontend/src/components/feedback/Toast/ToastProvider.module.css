@@ -1,0 +1,267 @@
+.region {
+  position: fixed;
+  z-index: 1000;
+  display: block;
+  pointer-events: none;
+}
+
+.bottom {
+  bottom: 16px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.bottomStart {
+  bottom: 16px;
+  left: 16px;
+}
+
+.bottomEnd {
+  right: 16px;
+  bottom: 16px;
+}
+
+.top {
+  top: 16px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.topStart {
+  top: 16px;
+  left: 16px;
+}
+
+.topEnd {
+  top: 16px;
+  right: 16px;
+}
+
+.toast {
+  position: absolute;
+  right: 0;
+  left: 0;
+  display: flex;
+  min-height: 52px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6px;
+  overflow: visible;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  background: var(--color-surface-elevated);
+  box-shadow: 0 18px 48px var(--color-shadow);
+  color: var(--color-text);
+  pointer-events: auto;
+  transform-origin: bottom center;
+  transition: scale 250ms cubic-bezier(0.2, 0.8, 0.2, 1), translate 250ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 250ms ease;
+  will-change: scale, translate, opacity;
+}
+
+.toastBottom {
+  bottom: 0;
+  transform-origin: bottom center;
+}
+
+.toastTop {
+  top: 0;
+  transform-origin: top center;
+}
+
+.toast:not([data-frontmost='true']) {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.toastEntering.toastBottom {
+  animation: toast-bottom-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.toastEntering.toastTop {
+  animation: toast-top-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.toastExiting.toastBottom {
+  animation: toast-bottom-out 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.toastExiting.toastTop {
+  animation: toast-top-out 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.indicator {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 4px;
+  color: var(--color-text-muted);
+  user-select: none;
+}
+
+.indicator svg {
+  width: 16px;
+  height: 16px;
+}
+
+.content {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-self: center;
+  flex-direction: column;
+}
+
+.title {
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.variantAccent .indicator,
+.variantAccent .title {
+  color: var(--color-accent-text);
+}
+
+.variantSuccess .indicator,
+.variantSuccess .title {
+  color: var(--color-success);
+}
+
+.variantWarning .indicator,
+.variantWarning .title {
+  color: var(--color-warning);
+}
+
+.variantDanger .indicator,
+.variantDanger .title {
+  color: var(--color-danger);
+}
+
+.action,
+.mobileAction {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 5px 10px;
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.action {
+  align-self: center;
+}
+
+.mobileAction {
+  display: none;
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+.action:hover,
+.mobileAction:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-hover);
+}
+
+.closeButton {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface-elevated);
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: background-color 150ms ease, color 150ms ease, opacity 150ms ease;
+}
+
+.toast[data-frontmost='true']:hover .closeButton,
+.closeButton:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.closeButton:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.closeButton svg {
+  width: 12px;
+  height: 12px;
+}
+
+@keyframes toast-bottom-in {
+  from {
+    opacity: 0;
+    translate: 0 100%;
+  }
+}
+
+@keyframes toast-bottom-out {
+  to {
+    opacity: 0;
+    translate: 0 100%;
+  }
+}
+
+@keyframes toast-top-in {
+  from {
+    opacity: 0;
+    translate: 0 -100%;
+  }
+}
+
+@keyframes toast-top-out {
+  to {
+    opacity: 0;
+    translate: 0 -100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .action {
+    display: none;
+  }
+
+  .mobileAction {
+    display: block;
+  }
+}
+
+@media (hover: none) {
+  .toast[data-frontmost='true'] .closeButton {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}

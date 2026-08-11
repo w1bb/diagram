@@ -1,0 +1,94 @@
+.splitView {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+.leadingPane {
+  min-width: 0;
+  flex: 0 0 auto;
+  transition: width 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.leadingPaneCollapsed {
+  overflow: hidden;
+}
+
+.separator {
+  position: relative;
+  z-index: 30;
+  width: 8px;
+  min-height: 100%;
+  flex: 0 0 8px;
+  margin-inline: -4px;
+  padding: 0;
+  background: var(--color-transparent);
+  cursor: col-resize;
+  touch-action: none;
+  transition: opacity 120ms ease;
+}
+
+.separator::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 0.5px);
+  width: 1px;
+  background: var(--color-border);
+  content: '';
+  transition: width 120ms ease, left 120ms ease, background-color 120ms ease;
+}
+
+.separator:hover::before,
+.separator:focus-visible::before,
+.separatorActive::before {
+  left: calc(50% - 1.5px);
+  width: 3px;
+  background: var(--color-focus);
+}
+
+.separator:focus-visible {
+  outline: none;
+}
+
+.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.resizing .leadingPane {
+  transition: none;
+}
+
+.separatorHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contentPane {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 900px) {
+  .splitView {
+    display: block;
+  }
+
+  .leadingPane {
+    display: contents;
+  }
+
+  .leadingPaneCollapsed {
+    overflow: visible;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .contentPane {
+    width: 100%;
+  }
+}

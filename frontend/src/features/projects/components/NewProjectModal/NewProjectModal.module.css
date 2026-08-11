@@ -1,0 +1,195 @@
+.modal {
+  width: min(488px, 100%);
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.iconFieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.iconFieldset legend,
+.fieldGroup label {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.iconFieldset legend {
+  margin-bottom: 7px;
+}
+
+.iconOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.iconOption {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease, color 140ms ease;
+}
+
+.iconOption:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.iconOptionSelected,
+.iconOptionSelected:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.iconOption svg {
+  width: 18px;
+  height: 18px;
+}
+
+.detailsPanel {
+  display: grid;
+  gap: 14px;
+}
+
+.fieldGroup {
+  display: grid;
+  gap: 6px;
+}
+
+.fieldGroup label {
+  margin: 0;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.labelRow span,
+.characterCount {
+  color: var(--color-text-subtle);
+  font-size: 12px;
+  letter-spacing: 0.1px;
+}
+
+.fieldGroup input,
+.fieldGroup textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  outline: 0;
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.fieldGroup input {
+  height: 36px;
+  padding: 6px 10px;
+  font-size: 15px;
+  font-weight: 550;
+}
+
+.fieldGroup textarea {
+  min-height: 80px;
+  padding: 8px 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.fieldGroup input::placeholder,
+.fieldGroup textarea::placeholder {
+  color: var(--color-text-subtle);
+  font-weight: 400;
+}
+
+.fieldGroup input:hover,
+.fieldGroup textarea:hover {
+  border-color: var(--color-border-strong);
+}
+
+.fieldGroup input:focus,
+.fieldGroup textarea:focus {
+  border-color: var(--color-focus);
+  background: var(--color-surface);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.fieldGroup input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+  box-shadow: none;
+}
+
+.fieldGroup input[aria-invalid='true']:focus {
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.characterCount {
+  justify-self: end;
+}
+
+.errorMessage {
+  margin: 0 2px;
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.secondaryButton,
+.primaryButton {
+  min-height: 36px;
+  border-radius: 8px;
+  padding: 6px 13px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 650;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.secondaryButton {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+.secondaryButton:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.primaryButton {
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-brand-foreground);
+}
+
+.primaryButton:hover {
+  border-color: var(--color-accent-text);
+  background: var(--color-accent-text);
+}
+
+@media (max-width: 560px) {
+  .form {
+    gap: 16px;
+  }
+}

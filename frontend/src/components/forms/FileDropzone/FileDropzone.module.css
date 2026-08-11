@@ -1,0 +1,84 @@
+.dropzone {
+  display: flex;
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 12px;
+  padding: 28px;
+  background: var(--color-surface-subtle);
+  color: var(--color-text-muted);
+  text-align: center;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.dragging {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.disabled {
+  opacity: 0.55;
+}
+
+.icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-accent-text);
+}
+
+.icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.heading {
+  margin-top: 14px;
+  color: var(--color-text);
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.description {
+  max-width: 460px;
+  margin-top: 5px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.button {
+  min-height: 38px;
+  margin-top: 18px;
+  border: 1px solid var(--color-accent);
+  border-radius: 9px;
+  padding: 7px 16px;
+  background: var(--color-accent);
+  color: var(--color-brand-foreground);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 650;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--color-accent-text);
+  background: var(--color-accent-text);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+@media (max-width: 620px) {
+  .dropzone {
+    min-height: 200px;
+    padding: 24px 18px;
+  }
+}

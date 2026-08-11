@@ -1,0 +1,305 @@
+.charts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.card {
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 22px;
+  background: var(--color-surface);
+  box-shadow: 0 2px 10px var(--color-shadow-subtle);
+}
+
+.cardHeading {
+  display: flex;
+  min-height: 48px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.cardHeading p,
+.cardHeading h2 {
+  margin: 0;
+}
+
+.cardHeading p {
+  color: var(--color-text-subtle);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cardHeading h2 {
+  margin-top: 3px;
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.overallBadge,
+.total {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: var(--color-surface-subtle);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.overallHealthy {
+  color: var(--color-success);
+}
+
+.overallAttention {
+  color: var(--color-warning);
+}
+
+.overallRisk {
+  color: var(--color-danger);
+}
+
+.overallBadge.overallHealthy,
+.overallBadge.overallAttention,
+.overallBadge.overallRisk {
+  background: var(--color-surface-subtle);
+}
+
+.overallScore {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.overallScore strong {
+  color: var(--color-text);
+  font-size: 38px;
+  font-weight: 680;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.overallScore span {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.progressTrack {
+  height: 7px;
+  overflow: hidden;
+  margin-top: 17px;
+  border-radius: 999px;
+  background: var(--color-surface-hover);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: currentColor;
+}
+
+.overallDetail {
+  margin: 15px 0 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.severityChart,
+.statusLegend {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.severityChart {
+  display: grid;
+  gap: 11px;
+}
+
+.severityChart li {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 9px;
+}
+
+.severityLabel {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.severityChart strong {
+  color: var(--color-text);
+  font-size: 12px;
+  text-align: right;
+}
+
+.barTrack {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-surface-hover);
+}
+
+.barFill {
+  display: block;
+  min-width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: currentColor;
+}
+
+.severityCritical,
+.statusOpen {
+  color: var(--color-danger);
+}
+
+.severityHigh,
+.statusAccepted {
+  color: var(--color-warning);
+}
+
+.severityMedium {
+  color: var(--color-accent);
+}
+
+.severityLow,
+.statusResolved {
+  color: var(--color-success);
+}
+
+.severityInfo,
+.statusDismissed {
+  color: var(--color-text-subtle);
+}
+
+.statusChart {
+  display: grid;
+  grid-template-columns: 132px minmax(110px, 1fr);
+  align-items: center;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.donutGraphic {
+  position: relative;
+  width: 132px;
+  height: 132px;
+}
+
+.donutGraphic svg {
+  width: 100%;
+  height: 100%;
+}
+
+.donutTrack,
+.donutSegment {
+  fill: none;
+  stroke-width: 5;
+}
+
+.donutTrack {
+  stroke: var(--color-surface-hover);
+}
+
+.donutSegment {
+  stroke: currentColor;
+}
+
+.donutCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.donutCenter strong {
+  color: var(--color-text);
+  font-size: 28px;
+  font-weight: 680;
+  line-height: 1;
+}
+
+.donutCenter small {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.statusLegend {
+  display: grid;
+  gap: 9px;
+}
+
+.statusLegend li {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.statusLegend strong {
+  color: var(--color-text);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (max-width: 1320px) {
+  .charts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .statusChart {
+    grid-template-columns: 150px minmax(180px, 260px);
+  }
+}
+
+@media (max-width: 720px) {
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .card:last-child {
+    grid-column: auto;
+  }
+
+  .statusChart {
+    grid-template-columns: 132px minmax(110px, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .statusChart {
+    grid-template-columns: 1fr;
+  }
+
+  .donutGraphic {
+    margin: 0 auto;
+  }
+}

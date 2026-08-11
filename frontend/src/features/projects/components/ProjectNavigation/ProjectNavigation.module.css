@@ -1,0 +1,11 @@
+.navigation {
+  display: grid;
+  gap: 4px;
+}
+
+.emptyMessage {
+  margin: 8px 8px 0;
+  color: var(--color-text-subtle);
+  font-size: 13px;
+  line-height: 1.4;
+}

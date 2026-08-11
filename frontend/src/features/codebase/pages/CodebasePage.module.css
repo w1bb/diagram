@@ -1,0 +1,532 @@
+.workflow,
+.setupForm,
+.selectionList {
+  display: grid;
+  gap: 18px;
+}
+
+.codebaseList,
+.snapshotSelections {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.codebaseCard,
+.selectionCard,
+.snapshotResult {
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+  background: var(--color-surface-subtle);
+}
+
+.codebaseCard {
+  padding: 18px;
+}
+
+.codebaseHeader,
+.selectionHeader,
+.snapshotHeader,
+.setupActions,
+.snapshotActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.codebaseTitle,
+.codebaseHeaderActions,
+.validatedBadge,
+.draftBadge,
+.credentialValue,
+.staleNotice,
+.primaryButton,
+.secondaryButton,
+.deleteButton,
+.modalCancelButton,
+.modalDeleteButton {
+  display: inline-flex;
+  align-items: center;
+}
+
+.codebaseTitle {
+  min-width: 0;
+  gap: 10px;
+}
+
+.codebaseTitle > svg {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  color: var(--color-accent-text);
+}
+
+.codebaseTitle h3,
+.selectionHeader h3 {
+  overflow: hidden;
+  margin: 0;
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 670;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.codebaseTitle span,
+.selectionHeader > div > span {
+  display: block;
+  overflow: hidden;
+  margin-top: 2px;
+  color: var(--color-text-subtle);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.codebaseHeaderActions {
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.validatedBadge,
+.draftBadge,
+.defaultBranch {
+  min-height: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 680;
+  white-space: nowrap;
+}
+
+.validatedBadge {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.draftBadge,
+.defaultBranch {
+  color: var(--color-text-muted);
+}
+
+.validatedBadge svg {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+}
+
+.deleteButton {
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.deleteButton:hover:not(:disabled) {
+  border-color: var(--color-danger);
+  background: var(--color-surface-hover);
+  color: var(--color-danger);
+}
+
+.deleteButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.deleteButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.fields,
+.selectionFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.field {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.field > span,
+.field > label {
+  color: var(--color-text-muted);
+}
+
+.field input,
+.field select,
+.credentialValue {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 9px;
+  padding: 8px 11px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.field input::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.field input:read-only,
+.credentialValue {
+  border-color: var(--color-border);
+  background: var(--color-surface-hover);
+  color: var(--color-text-muted);
+}
+
+.field input:disabled,
+.field select:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.field small {
+  color: var(--color-text-subtle);
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.35;
+}
+
+.credentialValue {
+  gap: 7px;
+}
+
+.credentialValue svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-success);
+}
+
+.setupActions,
+.snapshotActions {
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+}
+
+.primaryButton,
+.secondaryButton,
+.modalCancelButton,
+.modalDeleteButton {
+  min-height: 40px;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 680;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, opacity 150ms ease;
+}
+
+.primaryButton {
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-brand-foreground);
+}
+
+.primaryButton:hover:not(:disabled) {
+  border-color: var(--color-accent-text);
+  background: var(--color-accent-text);
+}
+
+.primaryButton:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-subtle);
+  cursor: not-allowed;
+}
+
+.secondaryButton,
+.modalCancelButton {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+.secondaryButton:hover:not(:disabled),
+.modalCancelButton:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.secondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.secondaryButton svg,
+.modalDeleteButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.formError {
+  margin: 0;
+  border-left: 3px solid var(--color-danger);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--color-surface-subtle);
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 620;
+}
+
+.staleNotice {
+  width: 100%;
+  gap: 10px;
+  border: 1px solid var(--color-warning);
+  border-radius: 10px;
+  padding: 11px 12px;
+  background: var(--color-surface-subtle);
+}
+
+.staleNotice > svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  color: var(--color-warning);
+}
+
+.staleNotice strong,
+.staleNotice span {
+  display: block;
+}
+
+.staleNotice strong {
+  color: var(--color-warning);
+  font-size: 14px;
+  font-weight: 680;
+}
+
+.staleNotice span {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.selectionCard {
+  padding: 16px 18px;
+}
+
+.selectionHeader > div {
+  min-width: 0;
+}
+
+.selectionFields {
+  margin-top: 14px;
+}
+
+.field select {
+  cursor: pointer;
+}
+
+.commitMetadata {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0;
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.commitMetadata code,
+.snapshotSelections code {
+  border-radius: 6px;
+  padding: 3px 6px;
+  background: var(--color-surface-hover);
+  color: var(--color-accent-text);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-weight: 680;
+}
+
+.commitMetadata > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.commitMetadata time {
+  color: var(--color-text-subtle);
+  white-space: nowrap;
+}
+
+.snapshotResult {
+  overflow: hidden;
+}
+
+.snapshotHeader {
+  padding: 16px 18px;
+  background: var(--color-surface-subtle);
+}
+
+.snapshotHeader > div > span,
+.snapshotHeader > div > strong {
+  display: block;
+}
+
+.snapshotHeader > div > span {
+  color: var(--color-text-subtle);
+  font-size: 12px;
+}
+
+.snapshotHeader > div > strong {
+  margin-top: 2px;
+  color: var(--color-text);
+  font-size: 18px;
+}
+
+.snapshotHeader time {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.snapshotSelections {
+  gap: 0;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.snapshotSelections li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+}
+
+.snapshotSelections li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.snapshotSelections li > div {
+  min-width: 0;
+}
+
+.snapshotSelections strong,
+.snapshotSelections li > div > span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.snapshotSelections strong {
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.snapshotSelections li > div > span,
+.snapshotSelections li > span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.snapshotActions {
+  margin-top: 18px;
+}
+
+.snapshotActions p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.deleteModalMessage {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.modalDeleteButton {
+  border: 1px solid var(--color-danger);
+  background: var(--color-danger);
+  color: var(--color-brand-foreground);
+}
+
+.modalDeleteButton:hover:not(:disabled) {
+  opacity: 0.86;
+}
+
+.modalDeleteButton:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface-subtle);
+  color: var(--color-text-subtle);
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .fields,
+  .selectionFields {
+    grid-template-columns: 1fr;
+  }
+
+  .snapshotSelections li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .snapshotSelections code {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 620px) {
+  .codebaseHeader,
+  .selectionHeader,
+  .snapshotHeader,
+  .setupActions,
+  .snapshotActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .codebaseHeaderActions {
+    justify-content: space-between;
+  }
+
+  .defaultBranch {
+    align-self: flex-start;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .commitMetadata {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .commitMetadata time {
+    grid-column: 1 / -1;
+  }
+}

@@ -1,0 +1,237 @@
+.reportStatus {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 6px 11px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.statusDraft {
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.statusFinal {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.statusArchived {
+  color: var(--color-text-subtle);
+}
+
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  background: var(--color-surface);
+  box-shadow: 0 2px 10px var(--color-shadow-subtle);
+}
+
+.selectionArea {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.selectLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-text-subtle);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.selectShell {
+  position: relative;
+  width: min(520px, 100%);
+}
+
+.selectShell select {
+  width: 100%;
+  min-height: 42px;
+  appearance: none;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  padding: 8px 42px 8px 12px;
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 620;
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.selectShell select:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-surface-hover);
+}
+
+.selectShell select:focus-visible {
+  border-color: var(--color-focus);
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.selectShell select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.selectShell svg {
+  position: absolute;
+  top: calc(50% - 8px);
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  rotate: 90deg;
+  color: var(--color-text-subtle);
+  pointer-events: none;
+}
+
+.reportContext {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  margin-top: 9px;
+}
+
+.reportContext p,
+.noReportContext {
+  width: 100%;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.reportContext span {
+  color: var(--color-text-subtle);
+  font-size: 12px;
+}
+
+.reportContext span + span::before {
+  content: '•';
+  margin-right: 12px;
+  color: var(--color-border-strong);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.metrics article {
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 17px 18px;
+  background: var(--color-surface);
+  box-shadow: 0 2px 10px var(--color-shadow-subtle);
+}
+
+.metrics span,
+.metrics strong,
+.metrics small {
+  display: block;
+}
+
+.solutionActionDock {
+  position: fixed;
+  z-index: 20;
+  right: 0;
+  bottom: 20px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.solutionAction {
+  display: inline-flex;
+  min-width: 164px;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid var(--color-accent);
+  border-radius: 11px;
+  padding: 10px 17px;
+  background: var(--color-accent);
+  color: var(--color-brand-foreground);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 680;
+  pointer-events: auto;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.solutionAction:hover:not(:disabled) {
+  border-color: var(--color-accent-text);
+  background: var(--color-accent-text);
+}
+
+.solutionAction:disabled {
+  cursor: wait;
+}
+
+.metrics span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.metrics strong {
+  margin-top: 9px;
+  color: var(--color-text);
+  font-size: 27px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.metrics small {
+  margin-top: 7px;
+  color: var(--color-text-subtle);
+  font-size: 11px;
+}
+
+@media (max-width: 1050px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .reportContext span {
+    width: 100%;
+  }
+
+  .reportContext span + span::before {
+    content: none;
+  }
+}

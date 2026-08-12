@@ -7,10 +7,15 @@ import styles from './ProjectNavigation.module.css';
 
 interface ProjectNavigationProps {
   readonly emptyMessage?: string;
+  readonly onEditProject: (project: ProjectSummary) => void;
   readonly projects: readonly ProjectSummary[];
 }
 
-export function ProjectNavigation({ emptyMessage = 'No projects available.', projects }: ProjectNavigationProps) {
+export function ProjectNavigation({
+  emptyMessage = 'No projects available.',
+  onEditProject,
+  projects,
+}: ProjectNavigationProps) {
   const { route } = useRouter();
   const activeProjectId = route.name === 'project' ? route.projectId : undefined;
   const [expandedProjectIds, setExpandedProjectIds] = useState<ReadonlySet<string>>(
@@ -56,6 +61,7 @@ export function ProjectNavigation({ emptyMessage = 'No projects available.', pro
           }
           isExpanded={expandedProjectIds.has(project.id)}
           key={project.id}
+          onEdit={() => onEditProject(project)}
           onToggle={() => toggleProject(project.id)}
           project={project}
         />

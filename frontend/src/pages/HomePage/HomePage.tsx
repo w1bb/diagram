@@ -1,4 +1,4 @@
-import { ArrowIcon } from '../../components/icons/PageIcons';
+import { ArrowIcon } from '../../components/icons/Icons';
 import { PageHeader } from '../../components/page/PageHeader/PageHeader';
 import { AppLink } from '../../app/routing/RouterProvider';
 import { projectPath } from '../../app/routing/routes';

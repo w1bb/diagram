@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
-import { CaretIcon } from '../../../components/icons/Icons';
+import { Dropdown } from '../../../components/forms/Dropdown/Dropdown';
 import { PageHeader } from '../../../components/page/PageHeader/PageHeader';
 import { Spinner } from '../../../components/feedback/Spinner/Spinner';
 import { toast } from '../../../components/feedback/Toast/toastStore';
@@ -249,7 +249,7 @@ export function ReportPage({ project }: ReportPageProps) {
     : 0;
 
   return (
-    <div className={workspaceStyles.page}>
+    <div className={`${workspaceStyles.page} ${workspaceStyles.workflowPage}`}>
       <ProjectWorkflowNavigation currentSection="report" project={project} />
 
       <PageHeader
@@ -268,22 +268,20 @@ export function ReportPage({ project }: ReportPageProps) {
           <label className={styles.selectLabel} htmlFor={reportSelectId}>
             Viewing report
           </label>
-          <div className={styles.selectShell}>
-            <select
-              disabled={reports.length === 0}
-              id={reportSelectId}
-              onChange={(event) => setSelectedReportId(event.currentTarget.value)}
-              value={selectedReport?.id ?? ''}
-            >
-              {reports.length === 0 ? <option value="">No reports available</option> : null}
-              {reports.map((report) => (
-                <option key={report.id} value={report.id}>
-                  {report.title} · {formatDate(report.updatedAt)}
-                </option>
-              ))}
-            </select>
-            <CaretIcon aria-hidden="true" />
-          </div>
+          <Dropdown
+            aria-label="Viewing report"
+            className={styles.reportDropdown}
+            disabled={reports.length === 0}
+            id={reportSelectId}
+            onChange={setSelectedReportId}
+            options={reports.map((report) => ({
+              label: `${report.title} · ${formatDate(report.updatedAt)}`,
+              value: report.id,
+            }))}
+            placeholder="No reports available"
+            popoverLabel="Available reports"
+            value={selectedReport?.id}
+          />
           {selectedReport ? (
             <div className={styles.reportContext}>
               <p>{selectedReport.description}</p>

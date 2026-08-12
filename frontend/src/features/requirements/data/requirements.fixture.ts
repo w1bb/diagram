@@ -1,8 +1,49 @@
-import type { DetectedRequirement } from '../model/requirement';
+import {
+  requirementAnchorId,
+  type DetectedRequirement,
+  type RequirementPriority,
+  type RequirementType,
+} from '../model/requirement';
 
 interface DetectedRequirementFixture extends Omit<DetectedRequirement, 'source'> {
   readonly sourceLocator: string;
 }
+
+interface LinkedRequirementSeed {
+  readonly id: string;
+  readonly label: string;
+  readonly priority: RequirementPriority;
+  readonly type: RequirementType;
+}
+
+const linkedRequirementSeeds: Readonly<Record<string, readonly LinkedRequirementSeed[]>> = {
+  'meridian-commerce': [
+    { id: 'REQ-CHECKOUT-012', label: 'Keep checkout totals consistent across concurrent cart updates', priority: 'critical', type: 'functional' },
+    { id: 'REQ-PAY-008', label: 'Make payment authorization retries idempotent', priority: 'critical', type: 'non_functional' },
+    { id: 'REQ-PAY-021', label: 'Verify partial refund provider behavior', priority: 'high', type: 'testing' },
+    { id: 'REQ-CHECKOUT-019', label: 'Apply one monetary rounding policy', priority: 'high', type: 'code_quality' },
+    { id: 'REQ-AUDIT-006', label: 'Record the reason for order cancellation', priority: 'high', type: 'compliance' },
+    { id: 'REQ-STOCK-014', label: 'Verify inventory timeout fallback behavior', priority: 'medium', type: 'testing' },
+    { id: 'REQ-OPS-004', label: 'Segment payment metrics by provider', priority: 'medium', type: 'performance' },
+  ],
+  'identity-platform': [
+    { id: 'REQ-SEC-002', label: 'Keep refresh credentials out of browser storage', priority: 'critical', type: 'security' },
+    { id: 'REQ-IAM-017', label: 'Revoke sessions after privilege changes', priority: 'critical', type: 'security' },
+    { id: 'REQ-MFA-011', label: 'Verify negative MFA recovery paths', priority: 'high', type: 'testing' },
+    { id: 'REQ-ACCOUNT-026', label: 'Release login aliases after account-retention cleanup', priority: 'medium', type: 'business' },
+    { id: 'REQ-AUDIT-013', label: 'Correlate authorization audit events to requests', priority: 'high', type: 'compliance' },
+    { id: 'REQ-UX-009', label: 'Keep password guidance aligned with active policy', priority: 'medium', type: 'other' },
+    { id: 'REQ-OPS-018', label: 'Alert on sustained identity-provider latency', priority: 'medium', type: 'performance' },
+  ],
+  'analytics-workbench': [
+    { id: 'REQ-DATA-004', label: 'Preserve tenant scope in asynchronous exports', priority: 'critical', type: 'security' },
+    { id: 'REQ-PERF-007', label: 'Bound dashboard aggregation date ranges', priority: 'high', type: 'performance' },
+    { id: 'REQ-ANALYTICS-016', label: 'Verify timezone boundary aggregation behavior', priority: 'high', type: 'testing' },
+    { id: 'REQ-UX-023', label: 'Surface failed dashboard refresh state', priority: 'medium', type: 'non_functional' },
+    { id: 'REQ-A11Y-010', label: 'Keep chart-series accessible labels unique', priority: 'medium', type: 'other' },
+    { id: 'REQ-OPS-021', label: 'Document worker saturation response guidance', priority: 'medium', type: 'performance' },
+  ],
+};
 
 const detectedRequirementFixtures: readonly DetectedRequirementFixture[] = [
   {
@@ -165,4 +206,31 @@ export function createMockRequirementSet(
       },
     };
   });
+}
+
+export function getLinkedRequirementByAnchor(
+  projectId: string,
+  anchorId: string,
+): DetectedRequirement | undefined {
+  const seed = linkedRequirementSeeds[projectId]?.find(
+    (candidate) => requirementAnchorId(candidate.id) === anchorId,
+  );
+
+  if (!seed) {
+    return undefined;
+  }
+
+  return {
+    description: `${seed.label}. This published fixture requirement is the traceability target used by project report findings.`,
+    id: seed.id,
+    label: seed.label,
+    nearDuplicates: [],
+    priority: seed.priority,
+    rawContent: `${seed.id}: ${seed.label}.`,
+    source: {
+      filename: `${projectId}-published-requirements.md`,
+      locator: `Published requirements · ${seed.id}`,
+    },
+    type: seed.type,
+  };
 }

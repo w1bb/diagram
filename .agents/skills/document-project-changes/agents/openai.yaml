@@ -1,0 +1,4 @@
+interface:
+  display_name: "Document Project Changes"
+  short_description: "Keep implementation and database docs in sync"
+  default_prompt: "Use $document-project-changes to implement this request and record all code, database, API, and architecture impacts."

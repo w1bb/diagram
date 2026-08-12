@@ -55,6 +55,16 @@ export const requirementTypeLabels: Readonly<Record<RequirementType, string>> = 
   other: 'Other',
 };
 
+export function requirementAnchorId(reference: string): string {
+  const slug = reference
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return `requirement-${slug || 'unavailable'}`;
+}
+
 export function requirementMatchesSearch(
   requirement: DetectedRequirement,
   searchValue: string,

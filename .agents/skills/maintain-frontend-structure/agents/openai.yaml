@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Frontend Structure"
+  short_description: "Preserve frontend boundaries and UI constraints"
+  default_prompt: "Use $maintain-frontend-structure to implement this frontend change within the established architecture and dependency rules."

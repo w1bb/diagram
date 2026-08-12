@@ -3,6 +3,7 @@ import { useId } from 'react';
 import { CaretIcon } from '../../../../components/icons/Icons';
 import {
   requirementPriorityLabels,
+  requirementAnchorId,
   requirementTypeLabels,
   type DetectedRequirement,
   type RequirementPriority,
@@ -12,6 +13,7 @@ import styles from './RequirementAccordion.module.css';
 interface RequirementAccordionProps {
   readonly index: number;
   readonly isExpanded: boolean;
+  readonly isTargeted?: boolean;
   readonly onToggle: () => void;
   readonly requirement: DetectedRequirement;
 }
@@ -27,13 +29,17 @@ const priorityClassNames: Readonly<Record<RequirementPriority, string | undefine
 export function RequirementAccordion({
   index,
   isExpanded,
+  isTargeted = false,
   onToggle,
   requirement,
 }: RequirementAccordionProps) {
   const panelId = useId();
 
   return (
-    <li className={styles.item}>
+    <li
+      className={`${styles.item} ${isTargeted ? styles.targeted : ''}`}
+      id={requirementAnchorId(requirement.id)}
+    >
       <button
         aria-controls={panelId}
         aria-expanded={isExpanded}

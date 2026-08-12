@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { createMockRepositoryMetadata } from '../data/codebases.fixture';
-import type {
-  CodebaseWorkspaceItem,
-  MockCodebaseSnapshot,
-  MockSnapshotSelection,
+import {
+  createMockCodebaseWorkspaceSeed,
+  createMockRepositoryMetadata,
+} from '../data/codebases.fixture';
+import {
+  codebaseSnapshotInputSignature,
+  type CodebaseWorkspaceItem,
+  type MockCodebaseSnapshot,
+  type MockSnapshotSelection,
 } from '../model/codebase';
 
 const SIMULATED_OPERATION_DURATION = 2000;
@@ -31,43 +35,69 @@ function isHttpsRepositoryUrl(value: string): boolean {
   }
 }
 
-function normalizeRepositoryUrl(value: string): string {
-  return value.trim().replace(/\/$/, '').toLocaleLowerCase();
-}
-
-function snapshotInputSignature(
+function validateCodebases(
   codebases: readonly CodebaseWorkspaceItem[],
-  configurationRevision: number,
-): string {
-  const selections = codebases.map((codebase) => ({
-    branch: codebase.selectedBranch,
-    commit: codebase.selectedCommit,
-    id: codebase.id,
-    url: normalizeRepositoryUrl(codebase.url),
-  }));
+): readonly CodebaseWorkspaceItem[] {
+  return codebases.map((codebase, index) => {
+    if (codebase.status === 'validated') {
+      return codebase;
+    }
 
-  return JSON.stringify({ configurationRevision, selections });
+    const repository = createMockRepositoryMetadata(codebase.url.trim(), index);
+    const defaultBranch = repository.branches.find(
+      (branch) => branch.name === repository.defaultBranch,
+    );
+    const latestCommit = defaultBranch?.commits[0];
+
+    return {
+      ...codebase,
+      credentialConfigured: true,
+      repository,
+      selectedBranch: defaultBranch?.name ?? '',
+      selectedCommit: latestCommit?.sha ?? '',
+      status: 'validated',
+      token: '',
+      url: codebase.url.trim(),
+    };
+  });
 }
 
 export function useCodebaseWorkspace(projectId: string) {
-  const [codebases, setCodebases] = useState<readonly CodebaseWorkspaceItem[]>(() => [
-    createDraftCodebase(),
-  ]);
-  const [configurationRevision, setConfigurationRevision] = useState(0);
+  const [initialWorkspace] = useState(() => createMockCodebaseWorkspaceSeed(projectId));
+  const [codebases, setCodebases] = useState<readonly CodebaseWorkspaceItem[]>(
+    initialWorkspace.codebases,
+  );
+  const [configurationRevision, setConfigurationRevision] = useState(
+    initialWorkspace.configurationRevision,
+  );
   const [isCreatingSnapshot, setIsCreatingSnapshot] = useState(false);
-  const [isValidating, setIsValidating] = useState(false);
-  const [snapshot, setSnapshot] = useState<MockCodebaseSnapshot | undefined>();
-  const [validatedConfigurationRevision, setValidatedConfigurationRevision] = useState<number | undefined>();
+  const [isValidating, setIsValidating] = useState(initialWorkspace.isValidating);
+  const [snapshot, setSnapshot] = useState<MockCodebaseSnapshot | undefined>(
+    initialWorkspace.snapshot,
+  );
+  const [validatedConfigurationRevision, setValidatedConfigurationRevision] = useState<
+    number | undefined
+  >(initialWorkspace.validatedConfigurationRevision);
   const snapshotTimerRef = useRef<number | undefined>(undefined);
   const validationTimerRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    setCodebases([createDraftCodebase()]);
-    setConfigurationRevision(0);
+    const workspace = createMockCodebaseWorkspaceSeed(projectId);
+    setCodebases(workspace.codebases);
+    setConfigurationRevision(workspace.configurationRevision);
     setIsCreatingSnapshot(false);
-    setIsValidating(false);
-    setSnapshot(undefined);
-    setValidatedConfigurationRevision(undefined);
+    setIsValidating(workspace.isValidating);
+    setSnapshot(workspace.snapshot);
+    setValidatedConfigurationRevision(workspace.validatedConfigurationRevision);
+
+    if (workspace.isValidating) {
+      validationTimerRef.current = window.setTimeout(() => {
+        validationTimerRef.current = undefined;
+        setCodebases((currentCodebases) => validateCodebases(currentCodebases));
+        setValidatedConfigurationRevision(workspace.configurationRevision);
+        setIsValidating(false);
+      }, SIMULATED_OPERATION_DURATION);
+    }
 
     return () => {
       if (validationTimerRef.current !== undefined) {
@@ -87,7 +117,7 @@ export function useCodebaseWorkspace(projectId: string) {
   const isValidationStale =
     hasValidation && validatedConfigurationRevision !== configurationRevision;
   const normalizedUrls = codebases
-    .map((codebase) => normalizeRepositoryUrl(codebase.url))
+    .map((codebase) => codebase.url.trim().replace(/\/$/, '').toLocaleLowerCase())
     .filter(Boolean);
   const hasDuplicateUrls = new Set(normalizedUrls).size !== normalizedUrls.length;
   const hasCompleteDrafts = codebases.every(
@@ -103,7 +133,7 @@ export function useCodebaseWorkspace(projectId: string) {
     (!hasValidation || isValidationStale);
 
   const currentSnapshotInputSignature = useMemo(
-    () => snapshotInputSignature(codebases, configurationRevision),
+    () => codebaseSnapshotInputSignature(codebases, configurationRevision),
     [codebases, configurationRevision],
   );
   const hasCompleteSelections = codebases.every(
@@ -172,30 +202,7 @@ export function useCodebaseWorkspace(projectId: string) {
 
     validationTimerRef.current = window.setTimeout(() => {
       validationTimerRef.current = undefined;
-      setCodebases((currentCodebases) =>
-        currentCodebases.map((codebase, index) => {
-          if (codebase.status === 'validated') {
-            return codebase;
-          }
-
-          const repository = createMockRepositoryMetadata(codebase.url.trim(), index);
-          const defaultBranch = repository.branches.find(
-            (branch) => branch.name === repository.defaultBranch,
-          );
-          const latestCommit = defaultBranch?.commits[0];
-
-          return {
-            ...codebase,
-            credentialConfigured: true,
-            repository,
-            selectedBranch: defaultBranch?.name ?? '',
-            selectedCommit: latestCommit?.sha ?? '',
-            status: 'validated',
-            token: '',
-            url: codebase.url.trim(),
-          };
-        }),
-      );
+      setCodebases((currentCodebases) => validateCodebases(currentCodebases));
       setValidatedConfigurationRevision(submittedRevision);
       setIsValidating(false);
     }, SIMULATED_OPERATION_DURATION);

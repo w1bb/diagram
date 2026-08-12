@@ -14,9 +14,11 @@ import {
   SunIcon,
 } from '../../components/icons/Icons';
 import { SplitView } from '../../components/layout/SplitView/SplitView';
-import { NewProjectModal } from '../../features/projects/components/NewProjectModal/NewProjectModal';
+import { NotificationCenter } from '../../features/notifications/components/NotificationCenter/NotificationCenter';
+import { ProjectModal } from '../../features/projects/components/ProjectModal/ProjectModal';
 import { ProjectNavigation } from '../../features/projects/components/ProjectNavigation/ProjectNavigation';
-import type { CreateProjectInput } from '../../features/projects/providers/ProjectProvider';
+import type { ProjectSummary } from '../../features/projects/model/project';
+import type { ProjectDetailsInput } from '../../features/projects/providers/ProjectProvider';
 import { useProjects } from '../../features/projects/providers/ProjectProvider';
 import { useTheme } from '../../app/providers/ThemeProvider';
 import { AppLink, useRouter } from '../../app/routing/RouterProvider';
@@ -27,16 +29,25 @@ interface AppShellProps {
   readonly children: ReactNode;
 }
 
+type ProjectModalState =
+  | { readonly mode: 'create' }
+  | { readonly mode: 'edit'; readonly projectId: string };
+
 export function AppShell({ children }: AppShellProps) {
   const collapseButtonRef = useRef<HTMLButtonElement>(null);
+  const newProjectButtonRef = useRef<HTMLButtonElement>(null);
+  const postDeleteFocusTimerRef = useRef<number | undefined>(undefined);
   const reopenButtonRef = useRef<HTMLButtonElement>(null);
   const [isNavigationCollapsed, setIsNavigationCollapsed] = useState(false);
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
-  const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
+  const [projectModalState, setProjectModalState] = useState<ProjectModalState>();
   const [projectSearch, setProjectSearch] = useState('');
-  const { createProject, projects } = useProjects();
+  const { createProject, deleteProject, projects, updateProject } = useProjects();
   const { navigate, route } = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const projectBeingEdited = projectModalState?.mode === 'edit'
+    ? projects.find((project) => project.id === projectModalState.projectId)
+    : undefined;
 
   const filteredProjects = useMemo(() => {
     const normalizedSearch = projectSearch.trim().toLocaleLowerCase();
@@ -66,6 +77,12 @@ export function AppShell({ children }: AppShellProps) {
     return () => mobileBreakpoint.removeEventListener('change', syncNavigationMode);
   }, []);
 
+  useEffect(() => () => {
+    if (postDeleteFocusTimerRef.current !== undefined) {
+      window.clearTimeout(postDeleteFocusTimerRef.current);
+    }
+  }, []);
+
   function collapseNavigation() {
     setIsNavigationCollapsed(true);
     window.requestAnimationFrame(() => reopenButtonRef.current?.focus());
@@ -76,14 +93,71 @@ export function AppShell({ children }: AppShellProps) {
     window.requestAnimationFrame(() => collapseButtonRef.current?.focus());
   }
 
-  function createNewProject(input: CreateProjectInput) {
+  function saveProject(input: ProjectDetailsInput) {
+    if (projectModalState?.mode === 'edit') {
+      const project = projects.find((candidate) =>
+        candidate.id === projectModalState.projectId);
+
+      if (!project) {
+        setProjectModalState(undefined);
+        return;
+      }
+
+      updateProject(project.id, input);
+      setProjectSearch('');
+      setProjectModalState(undefined);
+      toast.success('Project updated', {
+        description: `${input.name.trim()} was updated for this browser session.`,
+      });
+      return;
+    }
+
     const project = createProject(input);
     setProjectSearch('');
-    setIsNewProjectModalOpen(false);
+    setProjectModalState(undefined);
     toast.success('Project created', {
       description: `${project.name} is ready. Start by adding requirements.`,
     });
     navigate(projectPath(project.id, 'requirements'));
+  }
+
+  function editProject(project: ProjectSummary) {
+    setProjectModalState({ mode: 'edit', projectId: project.id });
+  }
+
+  function deleteEditedProject() {
+    if (!projectBeingEdited) {
+      setProjectModalState(undefined);
+      return;
+    }
+
+    const deletedProjectName = projectBeingEdited.name;
+    const isDeletingActiveProject = route.name === 'project'
+      && route.projectId === projectBeingEdited.id;
+
+    if (isDeletingActiveProject) {
+      navigate('/', { replace: true });
+    }
+
+    deleteProject(projectBeingEdited.id);
+    setProjectSearch('');
+    setProjectModalState(undefined);
+    toast.warning('Project deleted', {
+      description: `${deletedProjectName} was removed from this browser session.`,
+    });
+
+    if (postDeleteFocusTimerRef.current !== undefined) {
+      window.clearTimeout(postDeleteFocusTimerRef.current);
+    }
+
+    postDeleteFocusTimerRef.current = window.setTimeout(() => {
+      postDeleteFocusTimerRef.current = undefined;
+      if (isDeletingActiveProject) {
+        document.getElementById('main-content')?.focus();
+      } else {
+        newProjectButtonRef.current?.focus();
+      }
+    }, 120);
   }
 
   return (
@@ -174,7 +248,8 @@ export function AppShell({ children }: AppShellProps) {
                 <button
                   aria-label="New project"
                   className={styles.newProjectButton}
-                  onClick={() => setIsNewProjectModalOpen(true)}
+                  onClick={() => setProjectModalState({ mode: 'create' })}
+                  ref={newProjectButtonRef}
                   title="New project"
                   type="button"
                 >
@@ -190,6 +265,7 @@ export function AppShell({ children }: AppShellProps) {
               </div>
               <ProjectNavigation
                 emptyMessage="No projects match your search."
+                onEditProject={editProject}
                 projects={filteredProjects}
               />
             </div>
@@ -197,6 +273,7 @@ export function AppShell({ children }: AppShellProps) {
             <div className={styles.sidebarFooter}>
               <span className={styles.statusDot} />
               <span>Local workspace</span>
+              <NotificationCenter />
             </div>
           </aside>
         }
@@ -231,16 +308,18 @@ export function AppShell({ children }: AppShellProps) {
             </button>
           </header>
 
-          <main className={styles.main} id="main-content">
+          <main className={styles.main} id="main-content" tabIndex={-1}>
             {children}
           </main>
         </div>
       </SplitView>
 
-      <NewProjectModal
-        isOpen={isNewProjectModalOpen}
-        onClose={() => setIsNewProjectModalOpen(false)}
-        onCreate={createNewProject}
+      <ProjectModal
+        isOpen={projectModalState?.mode === 'create' || projectBeingEdited !== undefined}
+        onClose={() => setProjectModalState(undefined)}
+        onDelete={projectBeingEdited ? deleteEditedProject : undefined}
+        onSave={saveProject}
+        project={projectBeingEdited}
       />
     </div>
   );

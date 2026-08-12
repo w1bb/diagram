@@ -2,6 +2,8 @@ import {
   CaretIcon,
   CheckIcon,
   CodebaseIcon,
+  LogsIcon,
+  PencilIcon,
   ReportIcon,
   RequirementsIcon,
   WarningIcon,
@@ -20,6 +22,7 @@ import styles from './ProjectNavigationItem.module.css';
 interface ProjectNavigationItemProps {
   readonly activeSection: ProjectSection | undefined;
   readonly isExpanded: boolean;
+  readonly onEdit: () => void;
   readonly onToggle: () => void;
   readonly project: ProjectSummary;
 }
@@ -28,6 +31,7 @@ const navigationItems = [
   { section: 'requirements', label: 'Requirements', icon: RequirementsIcon },
   { section: 'codebase', label: 'Codebase', icon: CodebaseIcon },
   { section: 'report', label: 'Report', icon: ReportIcon },
+  { section: 'logs', label: 'Logs', icon: LogsIcon },
 ] as const;
 
 interface WorkflowStatusIndicatorProps {
@@ -71,6 +75,7 @@ function WorkflowStatusIndicator({ status }: WorkflowStatusIndicatorProps) {
 export function ProjectNavigationItem({
   activeSection,
   isExpanded,
+  onEdit,
   onToggle,
   project,
 }: ProjectNavigationItemProps) {
@@ -78,17 +83,28 @@ export function ProjectNavigationItem({
 
   return (
     <div className={styles.project}>
-      <button
-        aria-controls={panelId}
-        aria-expanded={isExpanded}
-        className={`${styles.projectButton} ${activeSection ? styles.projectButtonActive : ''}`}
-        onClick={onToggle}
-        type="button"
-      >
-        <ProjectGlyph className={styles.projectIcon} icon={project.icon} />
-        <span className={styles.projectName}>{project.name}</span>
-        <CaretIcon className={`${styles.caret} ${isExpanded ? styles.caretOpen : ''}`} />
-      </button>
+      <div className={styles.projectHeader}>
+        <button
+          aria-controls={panelId}
+          aria-expanded={isExpanded}
+          className={`${styles.projectButton} ${activeSection ? styles.projectButtonActive : ''}`}
+          onClick={onToggle}
+          type="button"
+        >
+          <ProjectGlyph className={styles.projectIcon} icon={project.icon} />
+          <span className={styles.projectName}>{project.name}</span>
+          <CaretIcon className={`${styles.caret} ${isExpanded ? styles.caretOpen : ''}`} />
+        </button>
+        <button
+          aria-label={`Edit ${project.name}`}
+          className={styles.editProjectButton}
+          onClick={onEdit}
+          title={`Edit ${project.name}`}
+          type="button"
+        >
+          <PencilIcon />
+        </button>
+      </div>
 
       <div
         className={`${styles.panel} ${isExpanded ? styles.panelOpen : ''}`}
@@ -98,7 +114,9 @@ export function ProjectNavigationItem({
           <div className={styles.links}>
             {navigationItems.map(({ section, label, icon: Icon }) => {
               const isActive = activeSection === section;
-              const status = project.workflowStatuses[section];
+              const status = section === 'logs'
+                ? undefined
+                : project.workflowStatuses[section];
               return (
                 <AppLink
                   ariaCurrent={isActive ? 'page' : undefined}
@@ -108,7 +126,7 @@ export function ProjectNavigationItem({
                 >
                   <Icon className={styles.linkIcon} />
                   <span className={styles.linkLabel}>{label}</span>
-                  <WorkflowStatusIndicator status={status} />
+                  {status ? <WorkflowStatusIndicator status={status} /> : null}
                 </AppLink>
               );
             })}

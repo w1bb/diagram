@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 
 import { CodebasePage } from '../features/codebase/pages/CodebasePage';
+import { ProjectLogsPage } from '../features/logs/pages/ProjectLogsPage';
 import { useProjects } from '../features/projects/providers/ProjectProvider';
 import { ReportPage } from '../features/reports/pages/ReportPage';
 import { RequirementsPage } from '../features/requirements/pages/RequirementsPage';
@@ -47,6 +48,9 @@ export function App() {
         break;
       case 'report':
         page = <ReportPage project={project} />;
+        break;
+      case 'logs':
+        page = <ProjectLogsPage project={project} />;
         break;
     }
   }

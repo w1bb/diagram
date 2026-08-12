@@ -10,16 +10,18 @@ import {
 import { projectFixtures } from '../data/projects.fixture';
 import type { ProjectIconName, ProjectSummary } from '../model/project';
 
-export interface CreateProjectInput {
+export interface ProjectDetailsInput {
   readonly description: string;
   readonly icon: ProjectIconName;
   readonly name: string;
 }
 
 interface ProjectContextValue {
-  readonly createProject: (input: CreateProjectInput) => ProjectSummary;
+  readonly createProject: (input: ProjectDetailsInput) => ProjectSummary;
+  readonly deleteProject: (projectId: string) => void;
   readonly findProject: (projectId: string) => ProjectSummary | undefined;
   readonly projects: readonly ProjectSummary[];
+  readonly updateProject: (projectId: string, input: ProjectDetailsInput) => void;
 }
 
 interface ProjectProviderProps {
@@ -33,7 +35,7 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     ...projectFixtures,
   ]);
 
-  const createProject = useCallback((input: CreateProjectInput) => {
+  const createProject = useCallback((input: ProjectDetailsInput) => {
     const project: ProjectSummary = {
       id: crypto.randomUUID(),
       icon: input.icon,
@@ -52,14 +54,31 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     return project;
   }, []);
 
+  const updateProject = useCallback((projectId: string, input: ProjectDetailsInput) => {
+    setProjects((currentProjects) => currentProjects.map((project) =>
+      project.id === projectId
+        ? {
+            ...project,
+            description: input.description.trim(),
+            icon: input.icon,
+            name: input.name.trim(),
+          }
+        : project));
+  }, []);
+
+  const deleteProject = useCallback((projectId: string) => {
+    setProjects((currentProjects) =>
+      currentProjects.filter((project) => project.id !== projectId));
+  }, []);
+
   const findProject = useCallback(
     (projectId: string) => projects.find((project) => project.id === projectId),
     [projects],
   );
 
   const value = useMemo<ProjectContextValue>(
-    () => ({ createProject, findProject, projects }),
-    [createProject, findProject, projects],
+    () => ({ createProject, deleteProject, findProject, projects, updateProject }),
+    [createProject, deleteProject, findProject, projects, updateProject],
   );
 
   return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;

@@ -42,3 +42,29 @@ export interface MockCodebaseSnapshot {
   readonly inputSignature: string;
   readonly selections: readonly MockSnapshotSelection[];
 }
+
+export interface MockCodebaseWorkspaceSeed {
+  readonly codebases: readonly CodebaseWorkspaceItem[];
+  readonly configurationRevision: number;
+  readonly isValidating: boolean;
+  readonly snapshot: MockCodebaseSnapshot | undefined;
+  readonly validatedConfigurationRevision: number | undefined;
+}
+
+function normalizeRepositoryUrl(value: string): string {
+  return value.trim().replace(/\/$/, '').toLocaleLowerCase();
+}
+
+export function codebaseSnapshotInputSignature(
+  codebases: readonly CodebaseWorkspaceItem[],
+  configurationRevision: number,
+): string {
+  const selections = codebases.map((codebase) => ({
+    branch: codebase.selectedBranch,
+    commit: codebase.selectedCommit,
+    id: codebase.id,
+    url: normalizeRepositoryUrl(codebase.url),
+  }));
+
+  return JSON.stringify({ configurationRevision, selections });
+}

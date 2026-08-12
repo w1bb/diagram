@@ -1,0 +1,24 @@
+.shimmer {
+  display: block;
+  min-height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-subtle),
+    var(--color-surface-hover),
+    var(--color-surface-subtle)
+  );
+  background-size: 220% 100%;
+  animation: shimmer-loading 1.35s ease-in-out infinite;
+}
+
+@keyframes shimmer-loading {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}

@@ -3,6 +3,8 @@ import type {
   ReportFinding,
   VerificationReport,
 } from '../model/report';
+import { requirementTypeLabels } from '../../requirements/model/requirement';
+import { formatEvidenceLocation } from './evidenceLinks';
 
 const exportFormatLabels: Readonly<Record<ReportExportFormat, string>> = {
   html: 'HTML',
@@ -40,7 +42,9 @@ export function createProposedSolution(
     '',
     `**Finding:** ${finding.description}`,
     '',
-    `**Evidence:** \`${finding.evidenceLocation}\``,
+    `**Requirement types:** ${finding.requirementTypes.map((type) => requirementTypeLabels[type]).join(', ')}`,
+    '',
+    `**Evidence:** ${finding.evidenceLocations.map((evidence) => `\`${formatEvidenceLocation(evidence)}\``).join(', ')}`,
     '',
     `**Proposed change:** ${finding.solutionProposal}`,
     '',
@@ -79,7 +83,8 @@ export function createMockExport(
     '',
     `- Severity: ${finding.severity}`,
     `- Status: ${finding.status}`,
-    `- Evidence: \`${finding.evidenceLocation}\``,
+    `- Requirement types: ${finding.requirementTypes.map((type) => requirementTypeLabels[type]).join(', ')}`,
+    `- Evidence: ${finding.evidenceLocations.map((evidence) => `\`${formatEvidenceLocation(evidence)}\``).join(', ')}`,
     `- Proposed solution: ${finding.solutionProposal}`,
     '',
     finding.description,

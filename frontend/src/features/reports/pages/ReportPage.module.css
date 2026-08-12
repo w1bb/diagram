@@ -53,51 +53,8 @@
   text-transform: uppercase;
 }
 
-.selectShell {
-  position: relative;
+.reportDropdown {
   width: min(520px, 100%);
-}
-
-.selectShell select {
-  width: 100%;
-  min-height: 42px;
-  appearance: none;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 10px;
-  padding: 8px 42px 8px 12px;
-  background: var(--color-surface-subtle);
-  color: var(--color-text);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 620;
-  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
-}
-
-.selectShell select:hover:not(:disabled) {
-  border-color: var(--color-accent);
-  background: var(--color-surface-hover);
-}
-
-.selectShell select:focus-visible {
-  border-color: var(--color-focus);
-  outline: 0;
-  box-shadow: 0 0 0 3px var(--color-accent-soft);
-}
-
-.selectShell select:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.selectShell svg {
-  position: absolute;
-  top: calc(50% - 8px);
-  right: 12px;
-  width: 16px;
-  height: 16px;
-  rotate: 90deg;
-  color: var(--color-text-subtle);
-  pointer-events: none;
 }
 
 .reportContext {

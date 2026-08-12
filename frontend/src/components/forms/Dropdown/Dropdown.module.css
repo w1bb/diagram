@@ -1,0 +1,267 @@
+.root {
+  position: relative;
+  min-width: 0;
+}
+
+.selectionRoot,
+.selectionTrigger {
+  width: 100%;
+}
+
+.menuRoot {
+  display: inline-block;
+}
+
+.trigger {
+  position: relative;
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  padding: 8px 11px;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 560;
+  line-height: 1.35;
+  text-align: left;
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  -webkit-tap-highlight-color: var(--color-transparent);
+}
+
+.primary {
+  background: var(--color-surface);
+  box-shadow: 0 1px 3px var(--color-shadow-subtle);
+}
+
+.secondary {
+  background: var(--color-surface-subtle);
+  box-shadow: none;
+}
+
+.accent {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-brand-foreground);
+  font-weight: 650;
+}
+
+.trigger:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-surface-hover);
+}
+
+.accent:hover:not(:disabled) {
+  border-color: var(--color-accent-text);
+  background: var(--color-accent-text);
+}
+
+.trigger:focus-visible {
+  border-color: var(--color-focus);
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.triggerValue {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuTrigger .triggerValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menuTrigger .triggerValue svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.placeholder {
+  color: var(--color-text-subtle);
+  font-weight: 450;
+}
+
+.indicator {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  rotate: 90deg;
+  color: currentColor;
+  opacity: 0.7;
+  transition: rotate 150ms ease;
+}
+
+.indicatorOpen {
+  rotate: -90deg;
+}
+
+.popover {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  left: 0;
+  display: grid;
+  max-height: 280px;
+  gap: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 5px;
+  background: var(--color-surface-elevated);
+  box-shadow: 0 14px 34px var(--color-shadow);
+  transform-origin: top left;
+}
+
+.popoverEntering {
+  animation: popover-enter 150ms ease both;
+}
+
+.popoverExiting {
+  pointer-events: none;
+  animation: popover-exit 100ms ease both;
+}
+
+.selectionPopover {
+  width: max(100%, 220px);
+}
+
+.menuPopover {
+  width: max-content;
+  min-width: 230px;
+  max-width: min(320px, calc(100vw - 32px));
+}
+
+.alignEnd {
+  right: 0;
+  left: auto;
+  transform-origin: top right;
+}
+
+.placeAbove {
+  top: auto;
+  bottom: calc(100% + 6px);
+  transform-origin: bottom left;
+}
+
+.placeAbove.alignEnd {
+  transform-origin: bottom right;
+}
+
+.option {
+  display: flex;
+  width: 100%;
+  min-height: 38px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 9px;
+  padding: 8px 10px;
+  background: var(--color-transparent);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.option:hover:not(:disabled),
+.option:focus-visible {
+  outline: 0;
+  background: var(--color-surface-hover);
+}
+
+.selectedOption,
+.selectedOption:hover:not(:disabled),
+.selectedOption:focus-visible {
+  background: var(--color-surface-selected);
+  color: var(--color-accent-text);
+}
+
+.option:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.optionCopy {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.optionLabel,
+.optionDescription {
+  display: block;
+}
+
+.optionLabel {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 580;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionDescription {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.3;
+}
+
+.endContent {
+  flex: 0 0 auto;
+  color: var(--color-text-subtle);
+}
+
+.selectionIndicator {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  place-items: center;
+}
+
+.selectionIndicator svg {
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes popover-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popover-exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}

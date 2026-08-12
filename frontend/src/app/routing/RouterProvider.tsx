@@ -58,6 +58,15 @@ export function RouterProvider({ children }: RouterProviderProps) {
   }, [syncLocation]);
 
   useLayoutEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
+
+  useLayoutEffect(() => {
     if (!resolution.redirectTo) {
       return;
     }
@@ -65,6 +74,10 @@ export function RouterProvider({ children }: RouterProviderProps) {
     window.history.replaceState(null, '', resolution.redirectTo);
     setResolution(resolvePath(resolution.redirectTo));
   }, [resolution.redirectTo]);
+
+  useLayoutEffect(() => {
+    window.scrollTo({ behavior: 'auto', left: 0, top: 0 });
+  }, [resolution.route]);
 
   const navigate = useCallback((to: string, options: NavigateOptions = {}) => {
     if (options.replace) {

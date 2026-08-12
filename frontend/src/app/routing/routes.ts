@@ -14,7 +14,7 @@ export interface RouteResolution {
   readonly redirectTo?: string;
 }
 
-const projectRoutePattern = /^\/projects\/([^/]+)\/(requirements|codebase|report)$/;
+const projectRoutePattern = /^\/projects\/([^/]+)\/(requirements|codebase|report|logs)$/;
 const projectRootPattern = /^\/projects\/([^/]+)$/;
 
 function safeDecodePathSegment(segment: string): string | undefined {
@@ -79,4 +79,3 @@ export function resolvePath(pathname: string): RouteResolution {
 
   return { route: { name: 'not-found', pathname } };
 }
-

@@ -1,3 +1,12 @@
+.requirementsSections {
+  display: grid;
+  gap: 18px;
+}
+
+.stepLabel {
+  font-size: 14px;
+}
+
 .sourceControls {
   display: grid;
   gap: 14px;
@@ -18,18 +27,60 @@
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-surface);
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.fileListDragging {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
 }
 
 .fileListHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 14px 16px;
   background: var(--color-surface-subtle);
+  transition: background-color 150ms ease;
+}
+
+.fileListDragging .fileListHeader {
+  background: var(--color-accent-soft);
 }
 
 .fileListHeader strong,
 .fileListHeader span {
   display: block;
+}
+
+.addFilesButton {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 7px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 5px 10px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.addFilesButton:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.addFilesButton svg {
+  width: 16px;
+  height: 16px;
 }
 
 .fileListHeader strong {
@@ -45,6 +96,7 @@
 }
 
 .downloadButton,
+.previewButton,
 .deleteButton {
   display: inline-flex;
   min-height: 30px;
@@ -70,6 +122,7 @@
 }
 
 .downloadButton:hover,
+.previewButton:hover,
 .deleteButton:hover:not(:disabled) {
   border-color: var(--color-border-strong);
   background: var(--color-surface-hover);
@@ -83,6 +136,7 @@
 }
 
 .downloadButton svg,
+.previewButton svg,
 .deleteButton svg {
   width: 15px;
   height: 15px;
@@ -373,6 +427,11 @@
 }
 
 @media (max-width: 620px) {
+  .fileListHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .selectedFiles li {
     align-items: flex-start;
     flex-direction: column;
@@ -383,6 +442,7 @@
   }
 
   .downloadButton,
+  .previewButton,
   .deleteButton {
     flex: 1;
   }

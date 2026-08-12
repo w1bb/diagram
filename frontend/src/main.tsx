@@ -6,6 +6,7 @@ import { AppErrorBoundary } from './app/errors/AppErrorBoundary';
 import { ThemeProvider } from './app/providers/ThemeProvider';
 import { RouterProvider } from './app/routing/RouterProvider';
 import { ProjectProvider } from './features/projects/providers/ProjectProvider';
+import { ProjectWorkflowNavigationProvider } from './features/projects/providers/ProjectWorkflowNavigationProvider';
 import { ToastProvider } from './components/feedback/Toast/ToastProvider';
 import './styles/fonts.css';
 import './styles/tokens.css';
@@ -20,14 +21,16 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <ThemeProvider>
-      <ToastProvider />
-      <RouterProvider>
-        <ProjectProvider>
-          <AppErrorBoundary>
-            <App />
-          </AppErrorBoundary>
-        </ProjectProvider>
-      </RouterProvider>
+      <ProjectWorkflowNavigationProvider>
+        <ToastProvider />
+        <RouterProvider>
+          <ProjectProvider>
+            <AppErrorBoundary>
+              <App />
+            </AppErrorBoundary>
+          </ProjectProvider>
+        </RouterProvider>
+      </ProjectWorkflowNavigationProvider>
     </ThemeProvider>
   </StrictMode>,
 );

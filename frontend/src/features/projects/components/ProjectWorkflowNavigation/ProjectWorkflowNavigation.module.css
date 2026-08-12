@@ -1,11 +1,152 @@
-.navigation {
-  margin-bottom: 48px;
+.wrapper {
+  position: relative;
+  margin-bottom: 40px;
+  overflow-anchor: none;
+  transition: margin-bottom 260ms ease;
+}
+
+.wrapperCollapsed {
+  margin-bottom: 24px;
+}
+
+.showControl {
+  position: absolute;
+  top: -20px;
+  left: calc(50% - 18px);
+  z-index: 12;
+  width: 36px;
+  height: 36px;
+  animation: showControlIn 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.showButton {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.showButton:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.showButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.showButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.showButton svg {
+  transform: rotate(90deg);
+}
+
+.drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition: grid-template-rows 260ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 160ms ease, visibility 0s linear 260ms;
+}
+
+.drawerOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition: grid-template-rows 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 200ms ease 40ms, visibility 0s;
+}
+
+.drawerInner {
+  min-height: 0;
+  overflow: hidden;
+  transform: scale(0.985);
+  transform-origin: top center;
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawerOpen .drawerInner {
+  transform: scale(1);
+}
+
+.drawerContent {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px;
+  align-items: center;
+  gap: 8px;
+}
+
+.hideButton {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: var(--color-transparent);
+  color: var(--color-border-strong);
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, scale 160ms ease;
+}
+
+.hideButton:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-muted);
+  scale: 1.06;
+}
+
+.hideButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.hideButton svg {
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes showControlIn {
+  from {
+    opacity: 0;
+    top: -68px;
+  }
+
+  to {
+    opacity: 1;
+    top: -20px;
+  }
+}
+
+@keyframes showControlInMobile {
+  from {
+    opacity: 0;
+    top: -132px;
+  }
+
+  to {
+    opacity: 1;
+    top: -20px;
+  }
 }
 
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 52px;
+  gap: 36px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -18,13 +159,13 @@
 
 .link {
   display: grid;
-  min-height: 116px;
-  grid-template-columns: 42px minmax(0, 1fr);
+  min-height: 88px;
+  grid-template-columns: 34px minmax(0, 1fr);
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  padding: 18px;
+  padding: 12px 14px;
   background: var(--color-surface);
   color: var(--color-text);
   text-decoration: none;
@@ -48,15 +189,15 @@
 
 .number {
   display: inline-flex;
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border-strong);
   border-radius: 50%;
   background: var(--color-surface-subtle);
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 750;
   letter-spacing: 0.04em;
 }
@@ -85,7 +226,7 @@
 }
 
 .label {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 680;
   line-height: 1.2;
 }
@@ -94,7 +235,7 @@
   overflow: hidden;
   margin-top: 3px;
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -104,9 +245,9 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 9px;
+  margin-top: 6px;
   color: var(--color-text-subtle);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 650;
   line-height: 1;
 }
@@ -158,61 +299,87 @@
 
 .arrow {
   position: absolute;
-  top: calc(50% - 10px);
-  left: calc(100% + 10px);
-  width: 32px;
-  height: 20px;
+  top: calc(50% - 12px);
+  left: calc(100% + 6px);
+  width: 24px;
+  height: 24px;
   color: var(--color-border-strong);
   pointer-events: none;
 }
 
 @media (max-width: 1120px) {
   .steps {
-    gap: 38px;
+    gap: 28px;
   }
 
   .link {
-    grid-template-columns: 36px minmax(0, 1fr);
-    gap: 11px;
-    padding: 15px;
+    min-height: 82px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
   }
 
   .number {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
   }
 
   .arrow {
-    left: calc(100% + 7px);
-    width: 24px;
+    top: calc(50% - 10px);
+    left: calc(100% + 4px);
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .showControl {
+    animation-name: showControlInMobile;
   }
 }
 
 @media (max-width: 760px) {
-  .navigation {
+  .wrapper {
     margin-bottom: 40px;
+  }
+
+  .wrapperCollapsed {
+    margin-bottom: 24px;
+  }
+
+  .drawerContent {
+    display: block;
+    padding-top: 34px;
+  }
+
+  .hideButton {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .steps {
     grid-template-columns: 1fr;
-    gap: 44px;
+    gap: 32px;
   }
 
   .link {
-    min-height: 104px;
-    grid-template-columns: 42px minmax(0, 1fr);
-    gap: 14px;
-    padding: 16px 18px;
+    min-height: 84px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 12px;
+    padding: 11px 14px;
   }
 
   .number {
-    width: 42px;
-    height: 42px;
+    width: 34px;
+    height: 34px;
   }
 
   .arrow {
-    top: calc(100% + 12px);
-    left: calc(50% - 16px);
+    top: calc(100% + 5px);
+    left: calc(50% - 11px);
+    width: 22px;
+    height: 22px;
     transform: rotate(90deg);
   }
 }

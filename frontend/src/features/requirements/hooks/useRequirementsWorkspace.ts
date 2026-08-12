@@ -3,10 +3,17 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   createMockRequirementSet,
 } from '../data/requirements.fixture';
+import { createMockMarkdownPreview } from '../data/markdownPreview.fixture';
 import type { DetectedRequirement } from '../model/requirement';
+import {
+  createInitialProcessingStages,
+  requirementProcessingStageDefinitions,
+  type ConvertedMarkdownDocument,
+  type RequirementProcessingStage,
+} from '../model/requirementProcessing';
 
 const SIMULATED_UPLOAD_DURATION = 2000;
-const SIMULATED_PROCESSING_DURATION = 2200;
+const SIMULATED_STAGE_DURATIONS = [1300, 1500, 1400, 1600] as const;
 
 export type SourceUploadStatus = 'uploading' | 'uploaded';
 
@@ -28,17 +35,26 @@ function fileKey(file: File): string {
 }
 
 export function useRequirementsWorkspace(projectId: string) {
+  const [convertedMarkdownDocuments, setConvertedMarkdownDocuments] = useState<
+    readonly ConvertedMarkdownDocument[]
+  >([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingStages, setProcessingStages] = useState<
+    readonly RequirementProcessingStage[]
+  >(() => createInitialProcessingStages());
   const [requirementSet, setRequirementSet] = useState<MockRequirementSet | undefined>();
   const [sourceDocuments, setSourceDocuments] = useState<readonly RequirementSourceDocument[]>([]);
   const [sourceRevision, setSourceRevision] = useState(0);
   const objectUrlsRef = useRef(new Map<string, string>());
+  const previewUrlsRef = useRef(new Map<string, string>());
   const processingTimerRef = useRef<number | undefined>(undefined);
   const sourceKeysRef = useRef(new Set<string>());
   const uploadTimersRef = useRef(new Map<string, number>());
 
   useEffect(() => {
+    setConvertedMarkdownDocuments([]);
     setIsProcessing(false);
+    setProcessingStages(createInitialProcessingStages());
     setRequirementSet(undefined);
     setSourceDocuments([]);
     setSourceRevision(0);
@@ -54,6 +70,8 @@ export function useRequirementsWorkspace(projectId: string) {
 
       objectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
       objectUrlsRef.current.clear();
+      previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+      previewUrlsRef.current.clear();
       sourceKeysRef.current.clear();
     };
   }, [projectId]);
@@ -120,6 +138,17 @@ export function useRequirementsWorkspace(projectId: string) {
       URL.revokeObjectURL(objectUrl);
       objectUrlsRef.current.delete(document.id);
     }
+
+    const previewUrl = previewUrlsRef.current.get(document.id);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      previewUrlsRef.current.delete(document.id);
+      setConvertedMarkdownDocuments((currentDocuments) =>
+        currentDocuments.filter(
+          (currentDocument) => currentDocument.sourceDocumentId !== document.id,
+        ),
+      );
+    }
   }, [isProcessing]);
 
   const canStartProcessing =
@@ -133,18 +162,71 @@ export function useRequirementsWorkspace(projectId: string) {
     }
 
     const processingSourceRevision = sourceRevision;
-    const processingSourceFilenames = sourceDocuments.map((document) => document.file.name);
-    setIsProcessing(true);
+    const processingSourceDocuments = [...sourceDocuments];
+    const processingSourceFilenames = processingSourceDocuments.map(
+      (document) => document.file.name,
+    );
 
-    processingTimerRef.current = window.setTimeout(() => {
-      processingTimerRef.current = undefined;
-      setRequirementSet((currentSet) => ({
-        requirements: createMockRequirementSet(processingSourceFilenames),
-        sourceRevision: processingSourceRevision,
-        version: (currentSet?.version ?? 0) + 1,
-      }));
-      setIsProcessing(false);
-    }, SIMULATED_PROCESSING_DURATION);
+    previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    previewUrlsRef.current.clear();
+    setConvertedMarkdownDocuments([]);
+    setIsProcessing(true);
+    setProcessingStages(createInitialProcessingStages().map((stage, index) => ({
+      ...stage,
+      status: index === 0 ? 'in-progress' : 'not-started',
+    })));
+
+    function completeStage(stageIndex: number) {
+      const nextStageIndex = stageIndex + 1;
+
+      processingTimerRef.current = window.setTimeout(() => {
+        processingTimerRef.current = undefined;
+
+        if (stageIndex === 0) {
+          const convertedDocuments = processingSourceDocuments.map((document) => {
+            const preview = createMockMarkdownPreview(document.file);
+            const downloadUrl = URL.createObjectURL(
+              new Blob([preview.content], { type: 'text/markdown;charset=utf-8' }),
+            );
+
+            previewUrlsRef.current.set(document.id, downloadUrl);
+
+            return {
+              content: preview.content,
+              downloadUrl,
+              filename: preview.filename,
+              sourceDocumentId: document.id,
+              sourceFilename: document.file.name,
+            };
+          });
+
+          setConvertedMarkdownDocuments(convertedDocuments);
+        }
+
+        setProcessingStages((currentStages) => currentStages.map((stage, index) => ({
+          ...stage,
+          status: index <= stageIndex
+            ? 'completed'
+            : index === nextStageIndex
+              ? 'in-progress'
+              : 'not-started',
+        })));
+
+        if (nextStageIndex < requirementProcessingStageDefinitions.length) {
+          completeStage(nextStageIndex);
+          return;
+        }
+
+        setRequirementSet((currentSet) => ({
+          requirements: createMockRequirementSet(processingSourceFilenames),
+          sourceRevision: processingSourceRevision,
+          version: (currentSet?.version ?? 0) + 1,
+        }));
+        setIsProcessing(false);
+      }, SIMULATED_STAGE_DURATIONS[stageIndex]);
+    }
+
+    completeStage(0);
 
     return true;
   }, [canStartProcessing, sourceDocuments, sourceRevision]);
@@ -152,10 +234,12 @@ export function useRequirementsWorkspace(projectId: string) {
   return {
     addSourceDocuments,
     canStartProcessing,
+    convertedMarkdownDocuments,
     deleteSourceDocument,
     isProcessing,
     isRequirementSetStale:
       requirementSet !== undefined && requirementSet.sourceRevision !== sourceRevision,
+    processingStages,
     requirementSet,
     sourceDocuments,
     startProcessing,

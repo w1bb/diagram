@@ -1,3 +1,5 @@
+import type { RequirementType } from '../../requirements/model/requirement';
+
 export type FindingSeverity = 'critical' | 'high' | 'medium' | 'low' | 'info';
 
 export type FindingStatus = 'open' | 'accepted' | 'dismissed' | 'resolved';
@@ -11,22 +13,40 @@ export type ReportExportFormat = 'markdown' | 'pdf' | 'html';
 
 export type ReportStatus = 'draft' | 'final' | 'archived';
 
+export interface ReportEvidenceLocation {
+  readonly column: number;
+  readonly line: number;
+  readonly path: string;
+  readonly repositoryUrl: string;
+  readonly revision: string;
+}
+
 export interface ReportFinding {
   readonly description: string;
-  readonly evidenceLocation: string;
+  readonly evidenceLocations: readonly [
+    ReportEvidenceLocation,
+    ...ReportEvidenceLocation[],
+  ];
   readonly id: string;
   readonly label: string;
   readonly requirementReference: string;
+  readonly requirementTypes: readonly [RequirementType, ...RequirementType[]];
   readonly severity: FindingSeverity;
   readonly solutionProposal: string;
   readonly status: FindingStatus;
   readonly type: FindingType;
 }
 
+export interface ReportRequirementTypeCount {
+  readonly identified: number;
+  readonly type: RequirementType;
+}
+
 export interface ReportSummary {
   readonly filesAnalyzed: number;
   readonly implementationCoverage: number;
   readonly requirementsTotal: number;
+  readonly requirementTypes: readonly ReportRequirementTypeCount[];
   readonly requirementsVerified: number;
   readonly testCoverage: number;
 }

@@ -1,4 +1,4 @@
-import type { ComponentType, SVGProps } from 'react';
+import type { ComponentType } from 'react';
 
 import {
   ChartProjectIcon,
@@ -8,6 +8,7 @@ import {
   ShieldProjectIcon,
   SparkleProjectIcon,
   TerminalProjectIcon,
+  type IconProps,
 } from '../../../../components/icons/Icons';
 import type { ProjectIconName } from '../../model/project';
 
@@ -21,7 +22,7 @@ interface ProjectIconOption {
   readonly value: ProjectIconName;
 }
 
-type IconComponent = ComponentType<Omit<SVGProps<SVGSVGElement>, 'children'>>;
+type IconComponent = ComponentType<IconProps>;
 
 const iconComponents: Record<ProjectIconName, IconComponent> = {
   layers: ProjectIcon,

@@ -8,7 +8,13 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
-import { CloseIcon } from '../../icons/Icons';
+import {
+  CircleAlertIcon,
+  CircleCheckIcon,
+  CircleXIcon,
+  CloseIcon,
+  WarningIcon,
+} from '../../icons/Icons';
 import { Spinner } from '../Spinner/Spinner';
 import { toast, toastStore, type ToastItem, type ToastVariant } from './toastStore';
 import styles from './ToastProvider.module.css';
@@ -62,38 +68,18 @@ const placementClassNames: Readonly<Record<ToastPlacement, string | undefined>> 
 
 function StatusIcon({ variant }: { readonly variant: ToastVariant }) {
   if (variant === 'success') {
-    return (
-      <svg aria-hidden="true" fill="none" viewBox="0 0 20 20">
-        <circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.6" />
-        <path d="m6.8 10.2 2 2 4.5-4.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
-      </svg>
-    );
+    return <CircleCheckIcon />;
   }
 
   if (variant === 'warning') {
-    return (
-      <svg aria-hidden="true" fill="none" viewBox="0 0 20 20">
-        <path d="M10 3 18 17H2L10 3Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.6" />
-        <path d="M10 7.5v4M10 14.3v.1" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" />
-      </svg>
-    );
+    return <WarningIcon />;
   }
 
   if (variant === 'danger') {
-    return (
-      <svg aria-hidden="true" fill="none" viewBox="0 0 20 20">
-        <circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.6" />
-        <path d="m7.5 7.5 5 5M12.5 7.5l-5 5" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" />
-      </svg>
-    );
+    return <CircleXIcon />;
   }
 
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 20 20">
-      <circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M10 9v4M10 6.4v.1" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" />
-    </svg>
-  );
+  return <CircleAlertIcon />;
 }
 
 function ToastTimer({ isPaused, item }: { readonly isPaused: boolean; readonly item: ToastItem }) {

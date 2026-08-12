@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 
 import { Spinner } from '../../../components/feedback/Spinner/Spinner';
 import { toast } from '../../../components/feedback/Toast/toastStore';
+import { Dropdown } from '../../../components/forms/Dropdown/Dropdown';
 import {
   CheckIcon,
   CodebaseIcon,
@@ -39,6 +40,8 @@ export function CodebasePage({ project }: CodebasePageProps) {
   const [codebasePendingDeletion, setCodebasePendingDeletion] = useState<
     CodebaseWorkspaceItem | undefined
   >();
+  const snapshotFeedbackProjectIdRef = useRef(project.id);
+  const validationFeedbackProjectIdRef = useRef(project.id);
   const wasCreatingSnapshotRef = useRef(false);
   const wasValidatingRef = useRef(false);
   const {
@@ -68,6 +71,12 @@ export function CodebasePage({ project }: CodebasePageProps) {
   }, [project.id]);
 
   useEffect(() => {
+    if (validationFeedbackProjectIdRef.current !== project.id) {
+      validationFeedbackProjectIdRef.current = project.id;
+      wasValidatingRef.current = false;
+      return;
+    }
+
     if (wasValidatingRef.current && !isValidating && hasValidation) {
       toast.success('Codebases validated', {
         description: 'Repository URLs are locked and mocked revision data is ready to select.',
@@ -75,9 +84,15 @@ export function CodebasePage({ project }: CodebasePageProps) {
     }
 
     wasValidatingRef.current = isValidating;
-  }, [hasValidation, isValidating]);
+  }, [hasValidation, isValidating, project.id]);
 
   useEffect(() => {
+    if (snapshotFeedbackProjectIdRef.current !== project.id) {
+      snapshotFeedbackProjectIdRef.current = project.id;
+      wasCreatingSnapshotRef.current = false;
+      return;
+    }
+
     if (wasCreatingSnapshotRef.current && !isCreatingSnapshot && snapshot) {
       toast.success('Snapshot created', {
         description: 'The selected repository revisions are pinned in the latest mock snapshot.',
@@ -85,7 +100,7 @@ export function CodebasePage({ project }: CodebasePageProps) {
     }
 
     wasCreatingSnapshotRef.current = isCreatingSnapshot;
-  }, [isCreatingSnapshot, snapshot]);
+  }, [isCreatingSnapshot, project.id, snapshot]);
 
   const validatedCodebases = codebases.filter(
     (codebase) => codebase.status === 'validated' && codebase.repository !== undefined,
@@ -148,7 +163,7 @@ export function CodebasePage({ project }: CodebasePageProps) {
       : 'A snapshot pins every selected branch and commit for later analysis.';
 
   return (
-    <div className={workspaceStyles.page}>
+    <div className={`${workspaceStyles.page} ${workspaceStyles.workflowPage}`}>
       <ProjectWorkflowNavigation currentSection="codebase" project={project} />
 
       <PageHeader
@@ -362,33 +377,34 @@ export function CodebasePage({ project }: CodebasePageProps) {
                     <div className={styles.selectionFields}>
                       <label className={styles.field} htmlFor={branchSelectId}>
                         <span>Branch</span>
-                        <select
+                        <Dropdown
                           disabled={isBusy}
                           id={branchSelectId}
-                          onChange={(event) => selectBranch(codebase.id, event.target.value)}
+                          onChange={(branchName) => selectBranch(codebase.id, branchName)}
+                          options={(codebase.repository?.branches ?? []).map((candidate) => ({
+                            label: candidate.name,
+                            value: candidate.name,
+                          }))}
+                          popoverLabel={`${codebase.repository?.displayName ?? 'Codebase'} branches`}
                           value={codebase.selectedBranch}
-                        >
-                          {codebase.repository?.branches.map((candidate) => (
-                            <option key={candidate.name} value={candidate.name}>
-                              {candidate.name}
-                            </option>
-                          ))}
-                        </select>
+                        />
                       </label>
                       <label className={styles.field} htmlFor={commitSelectId}>
                         <span>Commit</span>
-                        <select
+                        <Dropdown
                           disabled={isBusy}
                           id={commitSelectId}
-                          onChange={(event) => selectCommit(codebase.id, event.target.value)}
+                          onChange={(commitSha) => selectCommit(codebase.id, commitSha)}
+                          options={(branch?.commits ?? []).map((candidate) => ({
+                            description: candidate.message,
+                            label: candidate.sha,
+                            selectedLabel: `${candidate.sha} · ${candidate.message}`,
+                            textValue: `${candidate.sha} ${candidate.message}`,
+                            value: candidate.sha,
+                          }))}
+                          popoverLabel={`${codebase.repository?.displayName ?? 'Codebase'} commits`}
                           value={codebase.selectedCommit}
-                        >
-                          {branch?.commits.map((candidate) => (
-                            <option key={candidate.sha} value={candidate.sha}>
-                              {candidate.sha} · {candidate.message}
-                            </option>
-                          ))}
-                        </select>
+                        />
                       </label>
                     </div>
                     {commit ? (

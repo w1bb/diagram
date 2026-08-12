@@ -1,0 +1,207 @@
+.timeline {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 14px;
+  padding-bottom: 16px;
+}
+
+.item[data-side='start'] {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.rail {
+  position: relative;
+  display: flex;
+  min-height: 30px;
+  justify-content: center;
+  grid-column: 1;
+  grid-row: 1 / span 20;
+}
+
+.item[data-side='start'] .rail {
+  grid-column: 2;
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-transparent);
+  color: var(--color-text-subtle);
+}
+
+.marker svg {
+  width: 16px;
+  height: 16px;
+}
+
+.marker:empty::after {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  content: '';
+}
+
+.connector {
+  position: absolute;
+  top: 30px;
+  bottom: -16px;
+  left: calc(50% - 1px);
+  width: 2px;
+  background: var(--color-border-strong);
+}
+
+.content {
+  display: flex;
+  min-width: 0;
+  min-height: 30px;
+  flex-direction: column;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.item[data-side='start'] .content {
+  align-items: flex-end;
+  grid-column: 1;
+  text-align: right;
+}
+
+.timeline[data-axis='center'] .item {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.timeline[data-axis='center'] .rail,
+.timeline[data-axis='center'] .item[data-side='start'] .rail {
+  grid-column: 2;
+}
+
+.timeline[data-axis='center'] .content[data-side='start'] {
+  align-items: flex-end;
+  grid-column: 1;
+  text-align: right;
+}
+
+.timeline[data-axis='center'] .content[data-side='end'] {
+  align-items: flex-start;
+  grid-column: 3;
+  text-align: left;
+}
+
+.item[data-align='start'] .content {
+  justify-content: flex-start;
+}
+
+.item[data-align='center'] .content {
+  justify-content: center;
+}
+
+.timeline[data-density='compact'] .item {
+  padding-bottom: 12px;
+}
+
+.timeline[data-density='compact'] .connector {
+  bottom: -12px;
+}
+
+.item[data-last='true'] {
+  padding-bottom: 0;
+}
+
+.timeline[data-size='sm'] .item {
+  column-gap: 10px;
+}
+
+.timeline[data-size='sm'] .marker {
+  width: 22px;
+  height: 22px;
+}
+
+.timeline[data-size='sm'] .rail {
+  min-height: 22px;
+}
+
+.timeline[data-size='sm'] .marker svg {
+  width: 12px;
+  height: 12px;
+}
+
+.timeline[data-size='sm'] .connector {
+  top: 22px;
+}
+
+.timeline[data-size='sm'] .content {
+  min-height: 22px;
+}
+
+.timeline[data-size='lg'] .item {
+  column-gap: 17px;
+}
+
+.timeline[data-size='lg'] .marker {
+  width: 36px;
+  height: 36px;
+}
+
+.timeline[data-size='lg'] .rail {
+  min-height: 36px;
+}
+
+.timeline[data-size='lg'] .marker svg {
+  width: 19px;
+  height: 19px;
+}
+
+.timeline[data-size='lg'] .connector {
+  top: 36px;
+}
+
+.timeline[data-size='lg'] .content {
+  min-height: 36px;
+}
+
+.marker[data-status='current'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
+}
+
+.marker[data-status='success'] {
+  border-color: color-mix(in srgb, var(--color-success) 55%, var(--color-border));
+  background: color-mix(in srgb, var(--color-success) 12%, var(--color-transparent));
+  color: var(--color-success);
+}
+
+.marker[data-status='warning'] {
+  border-color: color-mix(in srgb, var(--color-warning) 55%, var(--color-border));
+  background: color-mix(in srgb, var(--color-warning) 12%, var(--color-transparent));
+  color: var(--color-warning);
+}
+
+.marker[data-status='danger'] {
+  border-color: color-mix(in srgb, var(--color-danger) 55%, var(--color-border));
+  background: color-mix(in srgb, var(--color-danger) 12%, var(--color-transparent));
+  color: var(--color-danger);
+}
+
+.marker[data-status='muted'] {
+  border-color: var(--color-border);
+  background: var(--color-transparent);
+  color: var(--color-text-subtle);
+  opacity: 0.7;
+}

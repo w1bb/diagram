@@ -4,6 +4,10 @@
   padding: 64px clamp(24px, 5vw, 72px) 80px;
 }
 
+.page.workflowPage {
+  padding-top: 32px;
+}
+
 .statusBadge,
 .count {
   display: inline-flex;

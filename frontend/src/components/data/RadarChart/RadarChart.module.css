@@ -1,0 +1,220 @@
+.root {
+  min-width: 0;
+  margin: 0;
+}
+
+.canvas {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+}
+
+.canvas svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gridPolygon,
+.gridAxis {
+  fill: none;
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+  opacity: 0.42;
+  vector-effect: non-scaling-stroke;
+}
+
+.gridAxis {
+  opacity: 0.3;
+}
+
+.series {
+  color: var(--color-accent);
+}
+
+.animatedSeries {
+  transform-origin: 220px 174px;
+  transform-box: view-box;
+  animation: seriesEnter 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.seriesArea {
+  fill: currentColor;
+  fill-opacity: 0.14;
+  stroke: none;
+  pointer-events: none;
+}
+
+.seriesLine {
+  fill: none;
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.seriesPoint {
+  fill: var(--color-surface);
+  stroke: currentColor;
+  stroke-width: 2;
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.pointHitArea {
+  fill: var(--color-surface);
+  fill-opacity: 0;
+  stroke: none;
+  cursor: help;
+  outline: none;
+  pointer-events: all;
+}
+
+.pointHitArea:hover + .seriesPoint,
+.pointHitArea:focus-visible + .seriesPoint {
+  fill: currentColor;
+  stroke: var(--color-surface);
+  stroke-width: 3;
+}
+
+.axisLabel {
+  fill: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.accent {
+  color: var(--color-accent);
+}
+
+.danger {
+  color: var(--color-danger);
+}
+
+.success {
+  color: var(--color-success);
+}
+
+.warning {
+  color: var(--color-warning);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 18px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legendMarker {
+  width: 9px;
+  height: 9px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: var(--color-surface);
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  width: max-content;
+  max-width: min(190px, calc(100% - 20px));
+  gap: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 9px 11px;
+  background: var(--color-surface-elevated);
+  box-shadow: 0 8px 24px var(--color-shadow);
+  color: var(--color-text);
+  font-size: 12px;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.tooltipEntering {
+  animation: tooltipEnter 120ms ease-out both;
+}
+
+.tooltipExiting {
+  animation: tooltipExit 100ms ease-in both;
+}
+
+.tooltip strong,
+.tooltip span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tooltip strong {
+  font-weight: 650;
+}
+
+.tooltip span {
+  color: var(--color-text-muted);
+}
+
+.emptyState {
+  display: grid;
+  height: 100%;
+  min-height: 260px;
+  place-items: center;
+  margin: 0;
+  color: var(--color-text-subtle);
+  font-size: 13px;
+}
+
+@keyframes seriesEnter {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tooltipEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tooltipExit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animatedSeries,
+  .tooltipEntering,
+  .tooltipExiting {
+    animation: none;
+  }
+}

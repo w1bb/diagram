@@ -1,0 +1,223 @@
+.root {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 15px 16px 13px;
+  background: var(--color-surface-subtle);
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.heading p,
+.heading h3 {
+  margin: 0;
+}
+
+.heading p {
+  color: var(--color-accent-text);
+  font-size: 11px;
+  font-weight: 720;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heading h3 {
+  margin-top: 3px;
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 680;
+}
+
+.heading > span {
+  flex: 0 0 auto;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.stageList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-rows: 36px auto;
+  gap: 8px;
+  justify-items: center;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.markerColumn {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-subtle);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.marker svg {
+  width: 19px;
+  height: 19px;
+}
+
+.connector {
+  position: absolute;
+  top: 17px;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background: var(--color-border-strong);
+}
+
+.stageContent {
+  display: grid;
+  min-width: 0;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+}
+
+.stageContent strong {
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 670;
+  line-height: 1.25;
+}
+
+.stageContent > span {
+  color: var(--color-text-subtle);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.stageContent small {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 680;
+}
+
+.in-progress .marker {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
+}
+
+.in-progress .stageContent small {
+  color: var(--color-accent-text);
+}
+
+.completed .marker {
+  border-color: var(--color-success);
+  background: var(--color-surface);
+  color: var(--color-success);
+}
+
+.completed .stageContent small {
+  color: var(--color-success);
+}
+
+.completed .connector {
+  background: var(--color-success);
+}
+
+.failed .marker {
+  border-color: var(--color-danger);
+  background: var(--color-surface);
+  color: var(--color-danger);
+}
+
+.failed .stageContent small {
+  color: var(--color-danger);
+}
+
+.liveStatus {
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .stageList {
+    gap: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .stage {
+    min-height: 76px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    grid-template-rows: none;
+    gap: 9px;
+    justify-items: stretch;
+    padding: 0;
+    text-align: left;
+  }
+
+  .markerColumn {
+    width: auto;
+    min-height: 100%;
+  }
+
+  .connector {
+    top: 34px;
+    left: 17px;
+    width: 1px;
+    height: calc(100% - 34px);
+  }
+
+  .stageContent {
+    align-items: initial;
+    padding: 4px 0 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .heading > span {
+    align-self: flex-start;
+  }
+}

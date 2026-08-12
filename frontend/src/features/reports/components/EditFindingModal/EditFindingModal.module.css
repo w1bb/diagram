@@ -16,7 +16,6 @@
 }
 
 .field input,
-.field select,
 .field textarea {
   display: block;
   width: 100%;
@@ -30,13 +29,8 @@
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
-.field input,
-.field select {
+.field input {
   min-height: 42px;
-}
-
-.field select {
-  cursor: pointer;
 }
 
 .field textarea {
@@ -46,7 +40,6 @@
 }
 
 .field input:focus-visible,
-.field select:focus-visible,
 .field textarea:focus-visible {
   border-color: var(--color-focus);
   outline: 0;

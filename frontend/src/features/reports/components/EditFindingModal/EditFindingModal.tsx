@@ -1,5 +1,6 @@
 import { useEffect, useId, useState, type FormEvent } from 'react';
 
+import { Dropdown } from '../../../../components/forms/Dropdown/Dropdown';
 import { ReportIcon } from '../../../../components/icons/Icons';
 import { Modal } from '../../../../components/overlay/Modal/Modal';
 import type { FindingSeverity, ReportFinding } from '../../model/report';
@@ -94,15 +95,14 @@ export function EditFindingModal({
       <form className={styles.form} id={formId} onSubmit={submitFinding}>
         <div className={styles.field}>
           <label htmlFor={severityId}>Severity</label>
-          <select
+          <Dropdown
             id={severityId}
-            onChange={(event) => setSeverity(event.currentTarget.value as FindingSeverity)}
+            onChange={setSeverity}
+            options={severityOptions}
+            popoverLabel="Finding severity options"
             value={severity}
-          >
-            {severityOptions.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
+            variant="secondary"
+          />
         </div>
 
         <div className={styles.field}>

@@ -1,5 +1,11 @@
 .item {
   min-width: 0;
+  scroll-margin-block: 24px;
+}
+
+.item:target > .header,
+.targeted > .header {
+  background: var(--color-accent-soft);
 }
 
 .item + .item {
